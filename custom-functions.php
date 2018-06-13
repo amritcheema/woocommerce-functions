@@ -30,10 +30,11 @@ function display_seller_name_on_product() {
 	$store_info = dokan_get_store_info( $author->ID );
 
 	if ( !empty( $store_info['store_name'] ) ) { ?>
-							<h5 class="details">
-									Seller: <?php printf( '<a href="%s">%s</a>', dokan_get_store_url( $author->ID ), $author->display_name ); ?>
-							</h5>
-	 <?php }
+    <h5 class="details">
+      Seller: <?php printf( '<a href="%s">%s</a>', dokan_get_store_url( $author->ID ), $author->display_name ); ?>
+    </h5>
+  <?php 
+  }
 
 }
 
