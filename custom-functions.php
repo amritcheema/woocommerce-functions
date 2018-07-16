@@ -172,6 +172,41 @@ function my_recent_posts_shortcode($atts) {
 
    return $list . '</div>';
    
-   }
+}
    
-   add_shortcode('recent-video-posts', 'my_recent_posts_shortcode');
+	add_shortcode('recent-video-posts', 'my_recent_posts_shortcode');
+	 
+//Display custom tag fields in new and edit product page dokan-woocommerce
+add_action('dokan_product_edit_before_main', 'my_dokan_store_end_fields_edit',1);
+add_action('dokan_new_product_form', 'my_dokan_store_end_fields_edit',1);
+
+function my_dokan_store_end_fields_edit() {
+
+$terms = get_the_terms(get_the_ID(),"product_tag");
+	$term_str = "";
+	if ( $terms && ! is_wp_error( $terms ) ) {
+		$term_links = array();
+		foreach ( $terms as $term ) {
+			$term_links[] = $term->name;
+		}				
+		$term_str = join( ", ", $term_links );
+	}
+   echo '<div class="dokan-form-group">
+			<label class="form-label">' . __( 'Tags: Separate with commas', 'my-dokan' ) . '	</label>
+				<textarea class="dokan-form-control" name="_tags">' . $term_str . '</textarea>
+		</div>';
+}
+
+// Save Fields from front-end
+add_action('dokan_process_product_meta', 'mydokan_save_meta_dashboard');
+add_action( 'dokan_new_product_added', 'mydokan_save_meta_dashboard' );
+
+function mydokan_save_meta_dashboard( $post_id ) {
+	//tags
+	if(!empty($_POST['_tags'])) {
+		echo 'hi';
+		$tag_list = stripslashes($_POST['_tags'] );
+		$tags = explode(",", $tag_list);
+		wp_set_object_terms( $post_id, $tags, 'product_tag' , false );
+	}
+}
